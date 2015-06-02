@@ -1,0 +1,39 @@
+Question 1.
+  Privacy-wise, Approach (b) represents a serious security problem.
+  Send Enc(msg) and Sign(msg) means you are first sending the encrypted message, which is fine (privacy-wise). Then you are sending signed(msg). Signing a message doesn't encrypt it! It only appends/prepends a string of bits to authenticate an author. As a result when signed(msg) is sent, someone may intercept the message. They will be able to read the exact message.
+  In all the other cases, we are encrypting our messages.
+
+  n.b: If we consider all the the security goals (privacy, authentication, integrity), lets evaluate all the approaches based on these 3 security goals:
+  a) Send Enc(msg, Sign(msg)) => Ensures privacy as whatever we send is encrypted. Authentication => Ensures authentication as it is signed, Integrity => Provides integrity however it has one very big problem which I will discuss using a scenario: Alice wants to share all the company's secrets with Bob. She writes an email saying "The company's bank number is 1111. The password is 2222". Alice signs her email message with her private key and encrypts it using bob's public key. 
+  She then sends the message to Bob. Bob decrypts the message by using his own private key. Bob verifies Alice's signature using her public key. Bob hates Alice, so he wants to get her fired. He encrypts the email using his Boss's public key and sends it to his boss(Changing some email headers to act like Alice sent him the mail). The Boss checks his email and is not tech savvy and ignores the warnings his email messaging system gives him. The boss then decrypts the message using his private key. He verifies Alice's signature using her public key. He fires Alice for sending him the company secrets.
+  Here it is quite hard for the boss to find out that Bob (or anyone else) has re-encrypted Alice's message. If Alice had encrypted-then-signed, then we can guarantee Alice had encrypted the message (Since anyone else who de-crypts it will not be able to re-sign it with Alice's private key without knowing it).
+  b) Send Enc(msg) and Sign(msg) => Ensures privacy when we send Enc(msg), however doesn't ensure privacy when we send Sign(msg) as signing something doesn't encrypt it, Authentication => In the first case provides no authentication, and in the second case it provides authentication because it is signed. Integrity => No integrity in the first case, however there is integrity in the second case. Changing the contents of the message should void the signature (considering a decent signature algorithm used). 
+  c) Send Enc(msg) and Sign(Enc(msg)) => Ensures privacy in both cases as we are always sending encrypted messages. Authentication => No authentication when we send Enc(msg), however when we send Sign(Enc(msg)), we get authentication (Also encrypt then sign avoids Alice's situation from A). Integrity=>Once again, no integrity when we send Enc(msg). However there is integrity when we send Sign(Enc(msg))
+  Best approach => Send Sign(Enc(msg))
+
+Question 2. 
+  Compress before encryption!!!!
+  Data compression algorithms tend to rely on patterns in data to remove redundancy and size.
+  Consider this simple example of compression: The string "hhhhh" can be represented using "h5", where h represents the character and 5 represents its occurences. "h5" can be decompressed by essentially concatenating h with itself 5 times. 
+  If we encrypt our data first, it will essentially become "random" and compression will be poor. As a result, we would have made our data secure by encrypting it, however it's size wouldn't be much different.
+  We should compress our data first, as we will be able to compress all the redundant information in our data improving the amount of compression we get.
+
+Question 3.
+a) 2^128 possibilities, 10^-6 seconds to test each possibility
+   Total seconds = 2^128 * 10^-6
+   Total years = (2^128 * 10^-6)/(60 * 60 * 24 * 365) = 1.08*10^25 years!!!!
+b) 2^256 possibilities, 10^-6 seconds to test each possibility
+   Total seconds = 2^256 * 10^-6
+   Total years = (2^256 * 10^-6)/(60 * 60 * 24 * 365) = 3.67*10^63 years!!!!!!!
+c) If we know the day on which it was taken, then it could be any millisecond on
+   that given day. 
+   Total milliseconds in a day = 24*60*60*1000 = 86,400,000 possibilities
+   Given it takes 10^-6 seconds to test each possibility
+   total time = 86,400,000 * 10^-6 = 86.4 seconds !!!
+d) If we know the millenium on which it was taken, then it could be any 			
+   millisecond out of 1000 years.
+   total years = 1000
+   total days = 1000*365 = 365,000
+   total milliseconds = 365,000*86,400,000 = 3.16*10^13
+   Given it takes 10^-6 seconds to test each possibility
+   total time = 3.16*10^13 * 10^-6/(60*60*24*365) = 1 year!!!

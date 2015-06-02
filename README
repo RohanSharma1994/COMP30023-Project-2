@@ -1,0 +1,27 @@
+COMP30023:Project 2 readme file.
+Author:Rohan Sharma, rsharma1
+s.n:639271
+
+Compilation instructions:
+Typing "make" should build the project.
+
+If there is any problems running the project:
+You can use the following command (just copy + paste in terminal (must be in project2 directory)):
+gcc -o client client.c connection.c
+gcc -o server server.c connection.c -pthread
+For some reason if the compiler fails to link the libraries automatically, you can use these commands:
+gcc -o client client.c connection.c -lsocket -lnsl
+gcc -o server server.c connection.c -pthread -lsocket -lnsl
+
+All the documentation for the functions are in their respective files, and the file structure is described below:
+
+Makefile: The makefile for this project.
+client.c: Contains all the code for the client.
+client.h: Header file for client.c.
+connect4.c: This is what we were provided. Only thing I did was removed the main() function.
+connection.c: This contains code for socket initialization for both the server and client.
+connection.h: Header file for connection.h.
+log.txt: Used to describe the interactions between server and client.
+project2b.txt: Project 2b.
+server.c: Contains all the code for the server.
+server.h: Header file for server.c.
